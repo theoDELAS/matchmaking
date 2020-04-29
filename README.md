@@ -11,7 +11,7 @@ Serveur de matchmaking
 
 ## Technos utilisés  
 nodeJS (back)
-React (front)
+Electronjs (front)
 
 
 
