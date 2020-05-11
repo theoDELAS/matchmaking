@@ -47,7 +47,7 @@ $(function() {
   // Get an access token for the current user, passing a username (identity)
   // and a device ID - for browser-based apps, we'll always just use the
   // value "browser"
-  $.getJSON('http://c83a32db.ngrok.io/token', {
+  $.getJSON('http://62271f2e.ngrok.io/token', {
     device: 'browser'
   }, function(data) {
 
