@@ -42,57 +42,57 @@ $(function() {
   }
 
   // Alert the user they have been assigned a random username
-  print('Logging in...');
+  print('Connexion ...');
 
   // Get an access token for the current user, passing a username (identity)
   // and a device ID - for browser-based apps, we'll always just use the
   // value "browser"
-  $.getJSON('http://8a961269.ngrok.io/token', {
+  $.getJSON('http://c83a32db.ngrok.io/token', {
     device: 'browser'
   }, function(data) {
 
 
     // Initialize the Chat client
     Twilio.Chat.Client.create(data.token).then(client => {
-      console.log('Created chat client');
+      console.log('Chat client créé');
       chatClient = client;
       chatClient.getSubscribedChannels().then(createOrJoinGeneralChannel);
 
     // Alert the user they have been assigned a random username
     username = data.identity;
-    print('You have been assigned a random username of: '
+    print('Un pseudo aléatoire vous a été assigné : '
     + '<span class="me">' + username + '</span>', true);
 
     }).catch(error => {
       console.error(error);
-      print('There was an error creating the chat client:<br/>' + error, true);
-      print('Please check your .env file.', false);
+      print('Une erreur lors de la création du chat client est survenue :<br/>' + error, true);
+      print('Vérifiez votre fichier .env', false);
     });
   });
 
   function createOrJoinGeneralChannel() {
     // Get the general chat channel, which is where all the messages are
     // sent in this simple application
-    print('Attempting to join "general" chat channel...');
+    print('Tentative de connexion au cannal de discussion "général" ...');
     chatClient.getChannelByUniqueName('general')
     .then(function(channel) {
       generalChannel = channel;
-      console.log('Found general channel:');
+      console.log('Cannal de discussion général trouvé :');
       console.log(generalChannel);
       setupChannel();
     }).catch(function() {
       // If it doesn't exist, let's create it
-      console.log('Creating general channel');
+      console.log('Création du cannal de discussion général');
       chatClient.createChannel({
         uniqueName: 'general',
         friendlyName: 'General Chat Channel'
       }).then(function(channel) {
-        console.log('Created general channel:');
+        console.log('Channal de discussion général créé :');
         console.log(channel);
         generalChannel = channel;
         setupChannel();
       }).catch(function(channel) {
-        console.log('Channel could not be created:');
+        console.log('Le cannal de discussion n\'a pas pu être créé');
         console.log(channel);
       });
     });
@@ -102,7 +102,7 @@ $(function() {
   function setupChannel() {
     // Join the general channel
     generalChannel.join().then(function(channel) {
-      print('Joined channel as '
+      print('Vous avez rejoins le channel de discussion avec comme pseudo  '
       + '<span class="me">' + username + '</span>.', true);
     });
 
@@ -118,7 +118,7 @@ $(function() {
 
     if (e.keyCode == 13) {
       if (generalChannel === undefined) {
-        print('The Chat Service is not configured. Please check your .env file.', false);
+        print('Le service de Chat n\'est pas configuré. Veuillez vérifier votre fichier .env', false);
         return;
       }
       generalChannel.sendMessage($input.val())
