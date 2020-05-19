@@ -8,7 +8,7 @@
   // const socket = io.connect('http://tic-tac-toe-realtime.herokuapp.com'),
     const $ = require('jquery');
     const io = require('socket.io-client/dist/socket.io')
-    const socket = io.connect('http://localhost:5000');
+    const socket = io.connect('http://a5559707.ngrok.io');
   
     class Player {
       constructor(name, type) {
