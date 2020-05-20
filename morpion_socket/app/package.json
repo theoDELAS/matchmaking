@@ -17,9 +17,13 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^8.2.5"
+    "electron": "^8.3.0"
   },
   "dependencies": {
-    "jquery": "^3.5.1"
+    "bootstrap": "^4.5.0",
+    "jquery": "^3.5.1",
+    "skeleton-css": "^2.0.4",
+    "socket.io": "^2.3.0",
+    "popper.js": "^1.14.4"
   }
 }
