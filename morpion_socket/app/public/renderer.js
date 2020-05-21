@@ -310,7 +310,7 @@
   // New Game created by current client. Update the UI and create new Game var.
   socket.on('newGame', (data) => {
     const message =
-      `Bonjour, ${data.name}. Voici votre game ID pour jouer avec vos amis : ${data.room}.
+      `Bonjour, ${data.name}</span> <br> Game ID : ${data.room}. <br>
       En attente d'un autre joueur ...`;
 
     // Create game for player 1
