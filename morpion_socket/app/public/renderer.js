@@ -218,12 +218,26 @@
     }
     socket.emit('createGame', { name });
     player = new Player(name, P1);
-    const $queryString = "INSERT INTO player(pseudo, partiesGagnees, partiesJouees) VALUES ('" + player.getPlayerName() + "', 0, 0)";
-    connection.query($queryString, (err) => {
-      if(err) {
-          return console.log("Error est survenue", err);
+    const $pseudoExist = "SELECT * FROM player WHERE pseudo = '" + player.getPlayerName() + "'";
+    connection.query($pseudoExist, (err, row) => {
+      // s'il existe, on incrémente son nombre de parties jouées
+      if (row.length) {
+        const $update = "UPDATE player SET partiesJouees = " + (row[0].partiesJouees += 1) + " WHERE player.id = " + row[0].id;
+        connection.query($update, (err) => {
+          if(err) {
+              return console.log("Une erreur est survenue lors de l'update", err);
+          }
+        });
+      // sinon on créer le joueur en bdd
+      } else {
+        const $queryString = "INSERT INTO player(pseudo, partiesGagnees, partiesJouees) VALUES ('" + player.getPlayerName() + "', 0, 0)";
+        connection.query($queryString, (err) => {
+          if(err) {
+              return console.log("Une erreur est survenue lors de la création du joueur", err);
+          }
+        });
       }
-    })
+    });
   });
 
   // Join an existing game on the entered roomId. Emit the joinGame event.
@@ -236,6 +250,26 @@
     }
     socket.emit('joinGame', { name, room: roomID });
     player = new Player(name, P2);
+    const $pseudoExist = "SELECT * FROM player WHERE pseudo = '" + player.getPlayerName() + "'";
+    connection.query($pseudoExist, (err, row) => {
+      // s'il existe, on incrémente son nombre de parties jouées
+      if (row.length) {
+        const $update = "UPDATE player SET partiesJouees = " + (row[0].partiesJouees += 1) + " WHERE player.id = " + row[0].id;
+        connection.query($update, (err) => {
+          if(err) {
+              return console.log("Une erreur est survenue lors de l'update", err);
+          }
+        });
+      // sinon on créer le joueur en bdd
+      } else {
+        const $queryString = "INSERT INTO player(pseudo, partiesGagnees, partiesJouees) VALUES ('" + player.getPlayerName() + "', 0, 0)";
+        connection.query($queryString, (err) => {
+          if(err) {
+              return console.log("Une erreur est survenue lors de la création du joueur", err);
+          }
+        });
+      }
+    });
   });
 
   // New Game created by current client. Update the UI and create new Game var.
@@ -288,6 +322,8 @@
   // If the other player wins, this event is received. Notify user game has ended.
   socket.on('gameEnd', (data) => {
     game.endGame(data.message);
+    console.log(message);
+    
     socket.leave(data.room);
   });
 
