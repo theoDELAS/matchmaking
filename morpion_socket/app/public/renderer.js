@@ -113,6 +113,19 @@
       $('.menu').css('display', 'none');
       $('.gameBoard').css('display', 'block');
       $('#userHello').html(message);
+      
+      const $board = "SELECT * FROM board WHERE roomId = '" + this.roomId + "'";
+      connection.query($board, (err, row) => {
+        const $insertBoard = "INSERT INTO board(board, roomId) VALUES ('" + JSON.stringify(this.board) + "', '" + this.roomId + "')";
+        if (!row[0]) {
+          connection.query($insertBoard, (err, row) => {
+              if(err) {
+                  return console.log("Error est survenue", err);
+              }
+          }); 
+        }
+      });
+
       this.createGameBoard();
     }
     /**
@@ -127,6 +140,18 @@
       $(`#${tile}`).text(type).prop('disabled', true);
       this.board[row][col] = type;
       this.moves++;
+
+      const $board = "SELECT * FROM board WHERE roomId = '" + this.roomId + "'";
+      connection.query($board, (err, row) => {       
+        if (JSON.stringify(JSON.parse(row[row.length-1].board)) !== JSON.stringify(this.board)) {
+          const $insertBoard = "INSERT INTO board(board, roomId) VALUES ('" + JSON.stringify(this.board) + "', '" + this.roomId + "')";
+          connection.query($insertBoard, (err) => {
+            if(err) {
+                return console.log("Une erreur est survenue lors de l'update", err);
+            }
+          });
+        }
+      });
     }
 
     getRoomId() {
@@ -200,6 +225,16 @@
       });
       alert(message);
       location.reload();
+
+      const $winner = "SELECT * FROM player WHERE pseudo = '" + player.getPlayerName() + "'";
+      connection.query($winner, (err, row) => {
+        const $update = "UPDATE player SET partiesGagnees = " + (row[0].partiesGagnees += 1) + " WHERE player.id = " + row[0].id;
+        connection.query($update, (err) => {
+          if(err) {
+              return console.log("Une erreur est survenue lors de l'update", err);
+          }
+        });
+      });
     }
 
     // End the game if the other player won.
@@ -230,7 +265,7 @@
         });
       // sinon on créer le joueur en bdd
       } else {
-        const $queryString = "INSERT INTO player(pseudo, partiesGagnees, partiesJouees) VALUES ('" + player.getPlayerName() + "', 0, 0)";
+        const $queryString = "INSERT INTO player(pseudo, partiesGagnees, partiesPerdues, partiesJouees, matchNul) VALUES ('" + player.getPlayerName() + "', 0, 0, 1, 0)";
         connection.query($queryString, (err) => {
           if(err) {
               return console.log("Une erreur est survenue lors de la création du joueur", err);
@@ -262,7 +297,7 @@
         });
       // sinon on créer le joueur en bdd
       } else {
-        const $queryString = "INSERT INTO player(pseudo, partiesGagnees, partiesJouees) VALUES ('" + player.getPlayerName() + "', 0, 0)";
+        const $queryString = "INSERT INTO player(pseudo, partiesGagnees, partiesPerdues, partiesJouees, matchNul) VALUES ('" + player.getPlayerName() + "', 0, 0, 1, 0)";
         connection.query($queryString, (err) => {
           if(err) {
               return console.log("Une erreur est survenue lors de la création du joueur", err);
