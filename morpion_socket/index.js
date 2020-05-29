@@ -8,9 +8,10 @@ var rooms = 0;
 app.use(express.static('.'));
 
 io.on('connection', function(socket){
-    console.log('Un utilisateur s\'est connecté'); // We'll replace this with our own events
+    // message dans le CLI du serveur qu'un joueur s'est connecté
+    console.log('Un utilisateur s\'est connecté');
     /**
-     * Create a new game room and notify the creator of game. 
+     * Créez une nouvelle room de jeux et informez le créateur du jeu.
      */
     socket.on('createGame', function(data){
         socket.join('room-' + ++rooms);
@@ -18,7 +19,7 @@ io.on('connection', function(socket){
     });
 
     /**
-     * Connect the Player 2 to the room he requested. Show error if room full.
+     * Connectez le joueur 2 à la room qu'il a demandée. Afficher l'erreur si la room est pleine.
      */
     socket.on('joinGame', function(data){
         var room = io.nsps['/'].adapter.rooms[data.room];
@@ -33,7 +34,7 @@ io.on('connection', function(socket){
     });
 
     /**
-     * Handle the turn played by either player and notify the other. 
+     * Gérez le tour joué par l'un des joueurs et informez l'autre. 
      */
     socket.on('playTurn', function(data){
         socket.broadcast.to(data.room).emit('turnPlayed', {
@@ -43,7 +44,7 @@ io.on('connection', function(socket){
     });
 
     /**
-     * Notify the players about the victor.
+     * Emettre une alerte sur la victoire d'un joueur
      */
     socket.on('gameEnded', function(data){
         socket.broadcast.to(data.room).emit('gameEnd', data);
