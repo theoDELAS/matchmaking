@@ -282,7 +282,7 @@
         });
       // sinon on créer le joueur en bdd
       } else {
-        const $queryString = "INSERT INTO player(pseudo, partiesGagnees, partiesPerdues, partiesJouees, matchNul) VALUES ('" + player.getPlayerName() + "', 0, 0, 1, 0)";
+        const $queryString = "INSERT INTO player(pseudo, partiesGagnees, partiesJouees) VALUES ('" + player.getPlayerName() + "', 0, 1)";
         connection.query($queryString, (err) => {
           if(err) {
               return console.log("Une erreur est survenue lors de la création du joueur", err);
@@ -316,7 +316,7 @@
         });
       // sinon on créer le joueur en bdd
       } else {
-        const $queryString = "INSERT INTO player(pseudo, partiesGagnees, partiesPerdues, partiesJouees, matchNul) VALUES ('" + player.getPlayerName() + "', 0, 0, 1, 0)";
+        const $queryString = "INSERT INTO player(pseudo, partiesGagnees, partiesJouees) VALUES ('" + player.getPlayerName() + "', 0, 1)";
         connection.query($queryString, (err) => {
           if(err) {
               return console.log("Une erreur est survenue lors de la création du joueur", err);
